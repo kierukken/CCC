@@ -1,31 +1,33 @@
-rows = int(input())
-columns = int(input())
-field = []
-count = 0
-booleanField = []
-for i in range(rows):
-    row_input = input("".format(i+1))
-    field.append([char for char in row_input])
-    booleanField.append([False for char in row_input])
-startY = int(input())
-startX = int(input())
-def flood_fill(x, y):
-    global count, field, booleanField
-    if 0 > x or x > rows-1 or 0 > y or y > columns-1:
-        return
-    if booleanField[x][y] is True or field[x][y] == "*":
-        return
-    if field[x][y] == "S":
-        count += 1
-    elif field[x][y] == "M":
-        count += 5
-    elif field[x][y] == "L":
-        count += 10
+import sys
+sys.setrecursionlimit(1000000)
 
-    booleanField[x][y] = True
-    array = [(x-1,y), (x+1,y), (x,y-1), (x,y+1)]
-    for dx, dy in array:
-        flood_fill(dx, dy)
+height = int(input())
+length = int(input())
 
-flood_fill(startY, startX)
-print(count)
+grid = [list(input()) for i in range(height)]
+
+startingy = int(input())
+startingx = int(input())
+
+total = 0
+
+def fill(x,y, grid):
+    global total, length, height
+    if grid[y][x] == 'S':
+        total+= 1
+    elif grid[y][x] == 'M':
+        total += 5
+    elif grid[y][x] == 'L':
+        total += 10
+    grid[y][x] = '*'
+    if x+1 < length and grid[y][x+1] != '*':
+        fill(x+1,y, grid)
+    if x-1 >= 0 and grid[y][x-1] != '*':
+        fill(x-1,y, grid)
+    if y+1 < height and grid[y+1][x] != '*':
+        fill(x,y+1, grid)
+    if y-1 >= 0 and grid[y-1][x] != '*':
+        fill(x,y-1, grid)
+    return 0
+fill(startingx, startingy, grid)
+print(total)
